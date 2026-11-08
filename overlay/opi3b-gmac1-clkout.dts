@@ -1,0 +1,12 @@
+/dts-v1/;
+/plugin/;
+/* Orange Pi 3B v1.1: YT8531 must drive its 125 MHz CLK_OUT (ext reg 0xA012=0xd0)
+ * or gigabit TX is dead on mainline. Verified 2026-11-08. */
+/ {
+	fragment@0 {
+		target-path = "/ethernet@fe010000/mdio/ethernet-phy@1";
+		__overlay__ {
+			motorcomm,clk-out-frequency-hz = <125000000>;
+		};
+	};
+};

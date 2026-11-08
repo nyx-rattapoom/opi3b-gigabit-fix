@@ -1,0 +1,7 @@
+[Unit]
+Description=Recover eth0 after cable/link events (no network manager on this box)
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/local/sbin/eth0-watchdog.sh

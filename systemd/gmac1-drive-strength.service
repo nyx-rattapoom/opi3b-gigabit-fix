@@ -1,0 +1,14 @@
+[Unit]
+Description=Raise GMAC1 RGMII pin drive strength (Orange Pi 3B gigabit fix)
+DefaultDependencies=no
+After=local-fs.target
+Before=network-pre.target
+Wants=network-pre.target
+
+[Service]
+Type=oneshot
+RemainAfterExit=yes
+ExecStart=/usr/local/sbin/gmac1-drive-strength.py
+
+[Install]
+WantedBy=sysinit.target
