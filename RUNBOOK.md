@@ -1,7 +1,7 @@
 # Runbook: Orange Pi 3B gigabit eth0 (next time)
 
 Board: Orange Pi 3B **v1.1**, RK3566, PHY Motorcomm **YT8531** (ID `4f51e91b`), DietPi / mainline kernel.
-Placeholders: `<pi-ip>` = the Pi's eth0 address, `<router-ip>` = your gateway, `<pi-mac>` = eth0 MAC (`cat /sys/class/net/eth0/address`).
+`<pi>` = the Pi's IP or hostname.
 Keep a second way in (USB gadget, Wi-Fi, serial console) while experimenting with eth0.
 
 ## Path A: fresh OS install / reflash (≈5 min)
@@ -15,7 +15,6 @@ Keep a second way in (USB gadget, Wi-Fi, serial console) while experimenting wit
 3. Reboot: `ssh root@<pi> 'systemd-run --on-active=3 /bin/systemctl reboot'`
    (a plain `ssh … reboot` can hang the SSH session).
 4. Verify: `ssh root@<pi> 'sh /root/opi3b-gigabit-fix/verify.sh'` should print all PASS, 0% loss.
-5. Network identity (see Path C) if the MAC changed.
 
 ## Path B: gigabit stopped working (diagnose in this order)
 
@@ -36,22 +35,7 @@ Symptom map:
 Things that are **not** the cause (proven by 160 sweep combinations, see `docs/investigation.md`):
 MAC/PHY RGMII delays, TX-clock inversion, EEE, PHY auto-sleep.
 
-## Path C: fixed IP via a DHCP reservation (OpenWrt example)
-
-- The router reserves the Pi's IP by MAC: `ssh root@<router-ip> 'uci show dhcp | grep -A3 <hostname>'`
-- DietPi/Armbian gives eth0 a locally-administered MAC that stays the same across reboots but **differs from the vendor OS MAC**,
-  so a reservation made under the vendor OS stops matching. Update it after a reflash:
-  ```sh
-  uci set dhcp.@host[<N>].mac='<pi-mac>'; uci commit dhcp; service dnsmasq restart
-  ```
-  then renew on the Pi (detached so it survives the eth0 bounce):
-  `systemd-run /bin/sh -c '/usr/sbin/ifdown --force eth0; /usr/sbin/ifup --force eth0'`
-- DHCP pushes the reservation name as the hostname, so keep `/etc/hostname`, `/etc/hosts` (127.0.1.1) and
-  `AUTO_SETUP_NET_HOSTNAME` in `/boot/dietpi.txt` the same as the reservation name, or the hostname changes on each lease renewal.
-- SSH `known_hosts` complains after a reflash: compare fingerprints first, then
-  `ssh-keygen -R <pi-ip>`.
-
-## Path D: roll back to the known-good 100M state
+## Path C: roll back to the known-good 100M state
 
 `sh rollback.sh` then reboot. The watchdog keeps eth0 at 100M while the overlay is absent.
 

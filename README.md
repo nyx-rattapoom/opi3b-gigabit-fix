@@ -32,7 +32,7 @@ RGMII delays were **not** the problem: mainline defaults (`rgmii-id`, PHY `0xA00
 | `scripts/eth0-watchdog.sh` + `systemd/eth0-watchdog.{service,timer}` | v5: recovers eth0 every 15 s; caps 100M **only** if the overlay is missing |
 | `tools/ytmii.py` | MII / YT85xx extended-register read/write (`r`, `w`, `er`, `ew`, `dump`) |
 | `install.sh` / `verify.sh` / `rollback.sh` | apply / check / undo (run on the Pi as root) |
-| `RUNBOOK.md` | **what to do next time**: reinstall, diagnose, IP/hostname, rollback |
+| `RUNBOOK.md` | **what to do next time**: reinstall, diagnose, rollback |
 | `docs/investigation.md` | evidence, register dumps, experiment table |
 | `docs/report.html` | visual report (diagram, experiment table, change list) |
 
