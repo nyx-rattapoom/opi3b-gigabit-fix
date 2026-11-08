@@ -50,3 +50,7 @@ ssh root@<pi> 'sh /root/opi3b-gigabit-fix/verify.sh'
 - orangepi-xunlong/linux-orangepi#135 (YT8531 on 3B v1.1; drive-strength pokes)
 - armbian/build#7490
 - Vendor BSP driver `drivers/net/phy/motorcomm.c` (orange-pi-5.10-rk35xx): `yt8511_config_out_125m()` writes `0xA012=0xd0`
+
+## License
+
+MIT, see [LICENSE](LICENSE). Writing hardware registers via `/dev/mem` is at your own risk; `rollback.sh` restores the u-boot defaults.
